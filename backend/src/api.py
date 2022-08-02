@@ -17,7 +17,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -260,7 +260,7 @@ def not_found(error):
     error handler should conform to general task above
 '''
 
-'''
+
 @app.errorhandler(401)
 def unauthorized(error):
     return jsonify({
@@ -268,7 +268,7 @@ def unauthorized(error):
         "error": 401,
         "message": "unauthorized"
     }), 401
-'''
+
 
 # error handler for Auth
 @app.errorhandler(AuthError)
