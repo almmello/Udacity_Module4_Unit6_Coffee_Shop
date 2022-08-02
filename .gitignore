@@ -4,7 +4,7 @@ env
 .vscode
 __pycache__
 test.db
-environment.ts
+
 
 # OS generated files #
 ######################
@@ -15,4 +15,4 @@ environment.ts
 .Trashes
 ehthumbs.db
 Thumbs.db
-frontend/src/environments/environment.ts
+
