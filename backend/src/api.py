@@ -29,8 +29,7 @@ db_drop_and_create_all()
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks', methods=['GET'], endpoint='get_drinks')
-@requires_auth('get:drinks')
-def read_all_drinks(jwt):
+def read_all_drinks():
 
     # using the try-except method to create the query
     try:
@@ -118,7 +117,7 @@ def create_drink(jwt):
         # return the data
         return jsonify({
             'success': True,
-            'drink': new_drink.long(),
+            'drinks': [new_drink.long()],
 
         })
 
@@ -166,7 +165,7 @@ def update_drink(jwt, id):
             # return the JSON object with the long drink
             return jsonify({
                 'success': True,
-                'drink': [query_drink.long()]
+                'drinks': [query_drink.long()]
             })
 
         # if there are no results, abort
