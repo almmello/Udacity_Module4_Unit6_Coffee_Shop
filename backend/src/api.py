@@ -5,7 +5,7 @@ import json
 from flask_cors import CORS
 
 from .database.models import db_drop_and_create_all, setup_db, Drink
-#from .auth.auth import AuthError, requires_auth
+from .auth.auth import AuthError, requires_auth
 
 app = Flask(__name__)
 setup_db(app)
@@ -29,7 +29,8 @@ CORS(app)
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks', methods=['GET'], endpoint='get_drinks')
-def read_all_drinks():
+@requires_auth('get:drinks')
+def read_all_drinks(jwt):
 
     # using the try-except method to create the query
     try:
@@ -62,7 +63,8 @@ def read_all_drinks():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks-detail', methods=['GET'], endpoint='drinks_detail')
-def read_all_drinks_detail():
+@requires_auth('get:drinks-detail')
+def read_all_drinks_detail(jwt):
 
     # using the try-except method to create the query
     try:
@@ -98,7 +100,8 @@ def read_all_drinks_detail():
 '''
 
 @app.route('/drinks', methods=['POST'], endpoint='post_drink')
-def create_drink():
+@requires_auth('post:drinks')
+def create_drink(jwt):
 
     # create the data JSON object
     data = request.get_json()
@@ -136,7 +139,8 @@ def create_drink():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks/<id>', methods=['PATCH'])
-def update_drink(id):
+@requires_auth('patch:drinks')
+def update_drink(jwt, id):
 
     # retrieve data from request to update the drink
     data = request.get_json()
@@ -184,7 +188,8 @@ def update_drink(id):
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks/<int:id>', methods=['DELETE'])
-def delete_drink(id):
+@requires_auth('delete:drinks')
+def delete_drink(jwt, id):
 
     # using the try-except method to delete the drink
     try:
@@ -255,7 +260,7 @@ def not_found(error):
     error handler should conform to general task above
 '''
 
-# error handler for Auth
+'''
 @app.errorhandler(401)
 def unauthorized(error):
     return jsonify({
@@ -263,6 +268,14 @@ def unauthorized(error):
         "error": 401,
         "message": "unauthorized"
     }), 401
+'''
+
+# error handler for Auth
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
 
 # error handler for 400
